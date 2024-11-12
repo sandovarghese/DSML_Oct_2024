@@ -6,8 +6,6 @@ import pickle
 st.header("Product Sales Predictor", divider="gray")
 df = pd.read_csv("./sales_data.csv")
 
-
-
 #no. of products store sells - factors store typ, loc, reg, activities, holiday n seasn
 
 col1, col2, col3 = st.columns(3)
@@ -23,7 +21,7 @@ with col1:
 with col2:
     loc = st.radio(
     "Which Location you would like to select?",
-    [":rainbow[L1]", ":rainbow[L2]", ":rainbow[L3]", ":rainbow[L4]"],
+    [":rainbow[L1]", ":rainbow[L2]", ":rainbow[L3]", ":rainbow[L4]",":rainbow[L5]"],
     horizontal=True,
 )
 
@@ -55,7 +53,7 @@ if st.button("Submit"):
         holiday = 'Yes'
 
     encode_dict = {"store_type": {':rainbow[S1]': 'S1',':rainbow[S2]': 'S2', ':rainbow[S3]': 'S3', ':rainbow[S4]': 'S4'},
-                "loc": {':rainbow[L1]': 'L1',':rainbow[L2]': 'L2', ':rainbow[L3]': 'L3', ':rainbow[L4]': 'L4'},
+                "loc": {':rainbow[L1]': 'L1',':rainbow[L2]': 'L2', ':rainbow[L3]': 'L3', ':rainbow[L4]': 'L4', ':rainbow[L5]': 'L5'},
                 "reg": {':rainbow[R1]': 'R1',':rainbow[R2]': 'R2', ':rainbow[R3]': 'R3', ':rainbow[R4]': 'R4'}
     }
 
@@ -71,8 +69,6 @@ if st.button("Submit"):
     col3.metric("Region", reg)
     col4.metric("Holiday", holiday)
     col5.metric("Discount provider", dis_count)
-
-
 
 st.dataframe(df.head())
 
