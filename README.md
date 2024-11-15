@@ -8,15 +8,17 @@ To be successful in today’s competent business world, retail store needs to fo
 
 Project Goal
 
-Our goal is to predict sales for retail stores based on historical data provided, with the help of various factors like store type, location, promotional activities, and trends (e.g., holidays, seasons). This will enable the management to make data-driven decisions on inventory, marketing, and operations.
+Our goal is to predict sales for retail stores based on historical data provided, with the help of various factors like store type, location, promotional activities, and trends (e.g., holidays, seasons). This will enable the management to make data-driven decisions on financial planning, inventory, marketing, and operations.
 
 Data Overview
 
 Data set provided consist of following features:
 
+•	Store ID		: Unique ID for each store
 •	Store Type		: Classification based on the type of store
-•	Location Type	: Classification based on the type of locaton like urban, suburban, etc.
+•	Location Type	: Classification based on the type of location like cities, metro, etc.
 •	Region Code		: Geographical region code for the store
+•	Date			: Date of sales
 •	Holiday		: Indicator of holiday or non-holiday
 •	Discount		: Whether a discount was offered on a given day or whether   promotional activities were carried out on the given day
 •	#Orders		: Number of orders received by the store
@@ -45,7 +47,11 @@ b.	Bivariate Analysis
 	Using correlation matrices, we examined relationships between features:
 i.	Discount and Sales: Sales were significantly higher on discount days.
 ii.	Holiday and Sales: Surprisingly, sales tended to be lower on holidays.
-Note. Outliers are not removed because sales value outlier can be true and real as the trend on promotional regular day is high.
+c.	Feature Engineering
+
+i.	New feature the derived from date column, which are day, month and year.
+Note. Outliers are not removed because sales value outlier can be true and real as the trend on promotional regular day is high. 
+
 
 2.	Hypothesis Testing
 To check the statistical impact of promotional activities, holiday, store type, and region on sales, we have done hypothesis testing and found the following result:
@@ -78,14 +84,26 @@ c.	Model Evaluation
 
 Each model was evaluated using R Score, Mean Absolute Error (MAE), Mean Squared Error (MSE), and Root Mean Squared Error (RMSE) on the test set. Here’s how the models performed:
 
-•	Linear Regression: R2=0.92, MAE = 3669, RMSE = 5081
-•	Random Forest: R2=0.96, MAE = 2466, RMSE = 3546
-•	XGBoost: R2=0.97, MAE = 2275, RMSE = 3309
+•	Linear Regression: R2=0.54, MAE = 8681, RMSE = 12366
+•	Random Forest: R2=0.71, MAE = 6730, RMSE = 9870
+•	XGBoost: R2=0.71, MAE = 6922, RMSE = 9936
 
-XGBoost gave the best R2 results, smallest error in prediction, capturing the nuances of the data better than the other models.
+Random Forest and XGBoost gave the best R2 results, smallest error in prediction, capturing the nuances of the data better than the other models.
 
+d.	Model Tuning
+
+Model tuning is performed on both RF Model and XGBoost model. After the tuning models are evaluated, their results are:
+
+•	Random Forest: R2=0.77, MAE = 6054, RMSE = 8650
+•	XGBoost: R2=0.83, MAE = 5129, RMSE = 7420
+		Hence, we are opting XGBoost model for prediction.
 4.	Deployment
 
+a.	Saving the Model
+To deploy the model for prediction, we have to save the model. Here, we are using pickle for that.
+
+b.	Web App
+After saving the model, we can create a streamlit app to allow users to input the feature, so that model can predict the sales for given future date.
 
 5.	Recommendations
 	Since, data proves that discounts boost sales, as well as sales on holidays are on lower side, and some regions and store type contribute more to sales.
@@ -98,3 +116,4 @@ XGBoost gave the best R2 results, smallest error in prediction, capturing the nu
 This project demonstrates the power of machine learning in predicting retail sales. I have covered everything from EDA and hypothesis testing to model selection, evaluation, and deployment. The insights and recommendation provided can help retailers optimize inventory, staff efficiently, and plan targeted marketing campaigns, all of which contribute to better business outcomes.
 
 Through this project, we saw how combining data science and domain knowledge can create a robust, data-driven sales forecasting solution, ready for practical implementation in the retail industry.
+
