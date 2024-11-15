@@ -1,12 +1,37 @@
-import streamlit as st
-import pandas as pd
-import numpy as np
-import datetime
+import streamlit as st # type: ignore
+import pandas as pd # type: ignore
+import numpy as np # type: ignore
+from datetime import datetime
 import pickle
 
-
-with open("xgb_sales_forecasting_model.pkl", "rb") as file:
+#loading model
+with open("xgb_model.pkl", "rb") as file:
     model = pickle.load(file)
+
+#function to predict the sales value
+def predict_sales(store_id, store_type, location_type, region_code, holiday, discount, date):
+    date_obj = datetime.strptime(date, '%Y-%m-%d')
+    year = date_obj.year
+    month = date_obj.month
+    day = date_obj.day
+    
+    
+    data = {
+        'Store_id': [store_id],
+        'Store_Type': [store_type],
+        'Location_Type': [location_type],
+        'Region_Code': [region_code],
+        'Holiday': [holiday],
+        'Discount': [discount],
+        'month': [month],
+        'year': [year],
+        'day': [day]
+    }
+    
+    input_data = pd.DataFrame(data)
+    
+    predicted_sales = model.predict(input_data)[0]
+    return predicted_sales
 
 
 st.header("Product Sales Predictor", divider="gray")
@@ -30,8 +55,6 @@ with col2:
     [":rainbow[L1]", ":rainbow[L2]", ":rainbow[L3]", ":rainbow[L4]",":rainbow[L5]"],
     horizontal=True,
 )
-
-
 
 with col3:
     reg = st.radio(
@@ -57,29 +80,12 @@ with col7:
 with col8:
     future_date = st.date_input("Select a Future Date")
     
-month = future_date.month
-year = future_date.year
-day = future_date.day
 
 location_type_dict = {"L1": 0, "L2": 1, "L3": 2, "L4": 3, "L5": 4}
 store_type_dict = {"S1": 0, "S2": 1, "S3": 2, "S4": 3}
-region_type_dict = {"S1": 0, "S2": 1, "S3": 2, "S4": 3}
+region_type_dict = {"R1": 0, "R2": 1, "R3": 2, "R4": 3}
 discount_dict = {"Yes": 1, "No": 0}
 holiday_dict = {"Yes": 1, "No": 0}
-
-inputs = np.array([
-    store_id,
-    store_type_dict[store_type],
-    location_type_dict[loc],
-    region_type_dict[reg],
-    holiday_dict[holiday],
-    discount_dict[dis_count],
-    month,
-    year,
-    day
-]).reshape(1, -1)
-
-
 
 
 if st.button("Submit"):
@@ -101,6 +107,8 @@ if st.button("Submit"):
 
     st.write("You selected:")
 
+    #st.write("You selected:", future_date)
+
     col1, col2, col3, col4, col5 = st.columns(5)
     col1.metric("Store Type", store_type)
     col2.metric("Location", loc)
@@ -108,9 +116,9 @@ if st.button("Submit"):
     col4.metric("Holiday", holiday)
     col5.metric("Promotional Activities", dis_count)
 
-    prediction = model.predict(inputs)
-    st.write(f"Predicted Sales for {future_date}: ${prediction[0]:.2f}")
-
+    sales_prediction = predict_sales(store_id, store_type_dict[store_type], location_type_dict[loc], region_type_dict[reg],
+                                     holiday_dict[holiday], discount_dict[dis_count], str(future_date))
+    st.success(f"Predicted Sales for {future_date}: ${sales_prediction:.2f}")
 
 
 st.dataframe(df.head())
