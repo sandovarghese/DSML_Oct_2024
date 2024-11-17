@@ -1,6 +1,6 @@
-# DSML_Oct_2024
+# Retail Sales Prediction with Machine Learning
  
-Retail Sales Prediction with Machine Learning
+
 
 Introduction
 
